@@ -5,14 +5,27 @@ from pointmass import PointMass
 class MassSystem:
     """a gravitational system of several objects"""
 
-    def __init__(self, not_yet_initialized=True, *args):
-        # TODO: complete construcor
+    def __init__(self, not_yet_initialized=True, *args: PointMass):
+        # TODO: make sure every args.name is unique
         if not_yet_initialized:
-            pass
-        else:
-            pass
+            bodyindex = {}
+            for i, body in enumerate(args):
+                bodyindex[body.name] = i
 
-        pass
+            shape = (len(args), len(args[0].position))
+
+            all_positions = np.zeros(shape)
+            for i, body in enumerate(args):
+                all_positions[i] = body.position
+
+            all_velocitys = np.zeros(shape)
+            for i, body in enumerate(args):
+                all_velocitys[i] = body.velocity
+
+        else:
+            all_positions = args[0]
+            all_velocitys = args[1]
+            bodyindex = args[2]
 
     def step(self, inplace=True):
         """calculate the next state of the gravitational system"""
