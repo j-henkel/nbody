@@ -19,10 +19,12 @@ class PointMass:
         calculates the distance to another object
     """
 
-    def __init__(self, mass: float, position: np.ndarray, velocity: np.ndarray):
+    def __init__(self, name: str, mass: float, position: np.ndarray, velocity: np.ndarray):
         """
         Parameters
         ----------
+        name: str
+            the name of the object
         mass: float
             the mass of the object in kg
         position: np.ndarray
@@ -32,6 +34,7 @@ class PointMass:
         """
 
         assert np.shape(self.position) == np.shape(self.velocity), "position and velocity must be of same shape"
+        self.name = name
         self.mass = mass
         self.position = position
         self.velocity = velocity
