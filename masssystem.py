@@ -22,10 +22,15 @@ class MassSystem:
             for i, body in enumerate(args):
                 all_velocitys[i] = body.velocity
 
+            all_masses = np.zeros(len(args))
+            for i, body in enumerate(args):
+                all_masses[i] = body.mass
+
         else:
             all_positions = args[0]
             all_velocitys = args[1]
-            bodyindex = args[2]
+            all_masses = args[2]
+            bodyindex = args[3]
 
     def step(self, inplace=True):
         """calculate the next state of the gravitational system"""
