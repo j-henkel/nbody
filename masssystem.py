@@ -3,7 +3,37 @@ from pointmass import PointMass
 
 
 class MassSystem:
-    """a gravitational system of several objects"""
+    """a gravitational system of several bodies
+
+    Attributes
+    ----------
+    bodyindex: dict
+        a dictionary that stores the index of each body in the arrays
+        all_positions, all_velocitys, all_masses, so it is easy to track
+        which column belongs to which body.
+    all_positions: np.ndarray
+        an array that stores all position arrays in a single array. E.g:
+            body1.position = np.array([1, 2, 3])
+            body2.position = np.array([4, 5, 6])
+            MassSystem(body1, body2).all_positions == \
+                np.array([[1, 2, 3], [4, 5, 6]])
+    all_velocitys: np.ndarray
+        an array that stores all velocity arrays in a single array
+    all_masses: np.ndarray
+        an array that stores all masses
+
+    Methods
+    -------
+    step(inplace)
+        run the simulation one timestep
+    centre_of_mass()
+        calculate the centre of mass of the mass-system
+    fix()
+        define the velocity of the centre of mass as zero and adjust
+        all single velocities accordingly
+    get_object(name)
+        return the PointMass object named name
+    """
 
     def __init__(self, not_yet_initialized=True, *args: PointMass):
         # TODO: make sure every args.name is unique
