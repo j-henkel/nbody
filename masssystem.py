@@ -38,11 +38,14 @@ class MassSystem:
     """
 
     def __init__(self, not_yet_initialized=True, *args):
-        # TODO: make sure every args.name is unique
         if not_yet_initialized:
             self.bodyindex = {}
             for i, body in enumerate(args):
-                self.bodyindex[body.name] = i
+                if body.name in self.bodyindex:
+                    raise AttributeError("there are several objects called "
+                                         + body.name)
+                else:
+                    self.bodyindex[body.name] = i
 
             shape = (len(args), len(args[0].position))
 
@@ -78,7 +81,7 @@ class MassSystem:
 
     def fix(self):
         """define the velocity of the centre of mass as zero and
-        adjust the velocity of all objects correspondingly"""
+        adjust self.all_velocities accordingly"""
         self.all_velocities = algorithms.fix(self.all_velocities,
                                              self.all_masses)
 

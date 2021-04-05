@@ -4,7 +4,7 @@ import numpy as np
 def fix(all_velocities: np.ndarray,
         all_masses: np.ndarray) -> np.ndarray:
     """define the velocity of the centre of mass as zero. Returns the
-    adjusted velocity of all objects within the masssystem
+    adjusted velocity of all objects within the masssystem.
     """
 
     all_pulses = all_velocities * all_masses[:, None]
