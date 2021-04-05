@@ -32,5 +32,20 @@ def fix(all_velocities: np.ndarray,
 
 def centre_of_mass(all_positions: np.ndarray,
                    all_masses: np.ndarray) -> np.ndarray:
-    """calculate the centre of mass"""
+    """calculate the centre of mass
+
+    Parameters
+    ----------
+    all_positions:np.ndarray
+        An array that combines several position arrays,
+        typically MassSysem.all_positions
+    all_masses:np.ndarray
+        An array that combines the corresponding masses,
+        typically MassSystem.all_masses
+
+    Returns
+    -------
+    centreofmass: np.ndarray
+        The centre of mass
+    """
     pass
