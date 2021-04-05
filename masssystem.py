@@ -11,10 +11,10 @@ class MassSystem:
     ----------
     bodyindex: dict
         a dictionary that stores the index of each body in the arrays
-        all_positions, all_velocitys, all_masses, so it is easy to track
-        which column belongs to which body.
+        all_positions, all_velocitys, all_masses, so it is easy to
+        track which column belongs to which body.
     all_positions: np.ndarray
-        an array that stores all position arrays in a single array. E.g:
+        an array that stores all position arrays in a single array:
             body1.position = np.array([1, 2, 3])
             body2.position = np.array([4, 5, 6])
             MassSystem(body1, body2).all_positions == \
@@ -38,6 +38,20 @@ class MassSystem:
     """
 
     def __init__(self, not_yet_initialized=True, *args):
+        """
+        Parameters
+        ----------
+        not_yet_initialized: bool
+            True if a new MassSysem is initialized from PointMass
+            objects. False if all attributes are already in their
+            final shape (this is for example used by step, if
+            inplace=False)
+        args:
+            if not_yet_initialized is True: PointMass
+            if not_yet_initialized is False:
+                (np.ndarray, np.ndarray, np.ndarray, dict)
+        """
+
         if not_yet_initialized:
             self.bodyindex = {}
             for i, body in enumerate(args):
