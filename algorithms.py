@@ -50,5 +50,6 @@ def centre_of_mass(all_positions: np.ndarray,
     """
 
     total_mass = all_masses.sum()
-    centreofmass = 1 / total_mass * (all_positions * all_masses[:, None]).sum()
+    mx = (all_positions * all_masses[:, None]).sum(axis=0)
+    centreofmass = 1 / total_mass * mx
     return centreofmass
