@@ -1,5 +1,4 @@
 import numpy as np
-# noinspection PyUnresolvedReferences
 from pointmass import PointMass
 
 
@@ -108,8 +107,13 @@ class MassSystem:
         velocity_centre_of_mass = total_pulse / total_mass
         self.all_velocities = self.all_velocities - velocity_centre_of_mass
 
-    def get_object(self, name: str):
+    def get_body(self, name: str):
         """return a PointMass object of the body named name"""
-        # TODO get_object method
 
-        pass
+        index = self.bodyindex(name)
+        m = self.all_masses(index)
+        x = self.all_positions(index)
+        v = self.all_velocities(index)
+
+        body = PointMass(name=name, mass=m, position=x, velocity=v)
+        return body
