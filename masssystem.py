@@ -1,5 +1,4 @@
 import numpy as np
-import algorithms
 # noinspection PyUnresolvedReferences
 from pointmass import PointMass
 
@@ -51,7 +50,6 @@ class MassSystem:
             if not_yet_initialized is False:
                 (np.ndarray, np.ndarray, np.ndarray, dict)
         """
-
         if not_yet_initialized:
             self.bodyindex = {}
             for i, body in enumerate(args):
@@ -88,16 +86,27 @@ class MassSystem:
         pass
 
     def centre_of_mass(self):
-        """calculate the centre of mass"""
-        # TODO centre_of_mass algorithm
+        """calculate the centre of mass
 
-        pass
+        Returns
+        -------
+        np.ndarray
+            The centre of mass
+        """
+        total_mass = self.all_masses.sum()
+        mx = (self.all_positions * self.all_masses[:, None]).sum(axis=0)
+        centreofmass = mx / total_mass
+        return centreofmass
 
     def fix(self):
         """define the velocity of the centre of mass as zero and
         adjust self.all_velocities accordingly"""
-        self.all_velocities = algorithms.fix(self.all_velocities,
-                                             self.all_masses)
+
+        all_pulses = self.all_velocities * self.all_masses[:, None]
+        total_pulse = all_pulses.sum(axis=0)
+        total_mass = self.all_masses.sum()
+        velocity_centre_of_mass = total_pulse / total_mass
+        self.all_velocities = self.all_velocities - velocity_centre_of_mass
 
     def get_object(self, name: str):
         """return a PointMass object of the body named name"""
