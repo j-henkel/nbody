@@ -4,20 +4,20 @@ import numpy as np
 def fix(all_velocities: np.ndarray,
         all_masses: np.ndarray) -> np.ndarray:
     """Define the velocity of the centre of mass as zero. Returns the
-    adjusted velocity of all objects within the masssystem.
+    adjusted all_velocities array.
 
     Parameters
     ----------
     all_velocities: np.ndarray
-        An array that combines the velocity vectors of several bodys,
-        typically a MassSystem.all_velocitys array
+        An array that combines the velocity vectors of several
+        bodys, typically a MassSystem.all_velocitys array
     all_masses: np.ndarray
-        An array that combines the corresponding masses, typically
-        a MassSystem.all_masses array
+        An array that combines the corresponding masses,
+        typically a MassSystem.all_masses array
 
     Returns
     -------
-    all_v_new: np.ndarray
+    np.ndarray
         The adjusted all_velocities array
     """
 
@@ -36,16 +36,19 @@ def centre_of_mass(all_positions: np.ndarray,
 
     Parameters
     ----------
-    all_positions:np.ndarray
+    all_positions: np.ndarray
         An array that combines several position arrays,
         typically MassSysem.all_positions
-    all_masses:np.ndarray
+    all_masses: np.ndarray
         An array that combines the corresponding masses,
         typically MassSystem.all_masses
 
     Returns
     -------
-    centreofmass: np.ndarray
+    np.ndarray
         The centre of mass
     """
-    pass
+
+    total_mass = all_masses.sum()
+    centreofmass = 1 / total_mass * (all_positions * all_masses[:, None]).sum()
+    return centreofmass
