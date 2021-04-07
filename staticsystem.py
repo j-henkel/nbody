@@ -1,8 +1,9 @@
 import numpy as np
 from pointmass import PointMass
+from scipy.constants import gravitational_constant
 
 
-class MassSystem:
+class StaticSystem:
     """a gravitational system of several bodies
 
     Attributes
@@ -73,16 +74,28 @@ class MassSystem:
                 self.all_masses[i] = body.mass
 
         else:
+            # this constructor is used by some methods
             self.all_positions = args[0]
             self.all_velocities = args[1]
             self.all_masses = args[2]
             self.bodyindex = args[3]
 
-    def step(self, inplace=True):
-        """calculate the next state of the gravitational system"""
-        # TODO write step algorithm
+    def step(self, dt, grav_const=gravitational_constant, inplace=True):
+        """calculate the next state of the gravitational system
+        """
+        new_positions = self.all_positions + self.all_velocities * dt
 
-        pass
+        # calculate connection vector map
+        shape = self.all_positions.shape
+        gridshape = (shape[0], shape[0], shape[1])
+        horizontal_grid = np.full(gridshape, self.all_positions)
+        vertical_grid = horizontal_grid.transpose((1, 0, 2))
+        convec_map = vertical_grid - horizontal_grid
+
+        # calculate distance map
+        dist_map = np.sqrt((convec_map ** 2).sum(axis=2))
+
+
 
     def centre_of_mass(self):
         """calculate the centre of mass
