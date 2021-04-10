@@ -4,7 +4,7 @@ from scipy.constants import gravitational_constant
 
 
 class StaticSystem:
-    """a gravitational system of several bodies
+    """a gravitational system containing several bodies
 
     Attributes
     ----------
@@ -171,11 +171,9 @@ class StaticSystem:
         PointMass
             the current state of the PointMass object
         """
-
         index = self.bodyindex(name)
-        m = self.all_masses(index)
-        x = self.all_positions(index)
-        v = self.all_velocities(index)
-
-        body = PointMass(name=name, mass=m, position=x, velocity=v)
+        body = PointMass(name=name,
+                         mass=self.all_masses[index],
+                         position=self.all_positions[index],
+                         velocity=self.all_velocities[index])
         return body
