@@ -84,7 +84,6 @@ class StaticSystem:
         """calculate the next state of the gravitational system
         """
         # TODO docstrings of step()
-        # TODO division by zero problem
 
         # calculate connection vector map
         shape = self.all_positions.shape
@@ -96,6 +95,8 @@ class StaticSystem:
         # calculate distance map (and reshape for further computation)
         dist_map = np.sqrt((convec_map ** 2).sum(axis=2))
         dist_map_rs = dist_map.reshape((shape[0], shape[0], 1))
+        # replace 0s wit 1s to avoid division by zero (does not affect result)
+        dist_map_rs[dist_map_rs == 0] = 1
 
         # calculate acceleration
         mlen = len(self.all_masses)
