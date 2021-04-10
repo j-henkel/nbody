@@ -83,7 +83,8 @@ class StaticSystem:
     def step(self, dt, grav_const=gravitational_constant, inplace=True):
         """calculate the next state of the gravitational system
         """
-        new_positions = self.all_positions + self.all_velocities * dt
+        # TODO docstrings of step()
+        # TODO division by zero problem
 
         # calculate connection vector map
         shape = self.all_positions.shape
@@ -92,10 +93,29 @@ class StaticSystem:
         vertical_grid = horizontal_grid.transpose((1, 0, 2))
         convec_map = vertical_grid - horizontal_grid
 
-        # calculate distance map
+        # calculate distance map (and reshape for further computation)
         dist_map = np.sqrt((convec_map ** 2).sum(axis=2))
+        dist_map_rs = dist_map.reshape((shape[0], shape[0], 1))
 
+        # calculate acceleration
+        mlen = len(self.all_masses)
+        mass_matrix = np.full((mlen, mlen), self.all_masses)
+        mass_matrix = mass_matrix.reshape((mlen, mlen, 1))
+        mx = convec_map * mass_matrix / (dist_map_rs ** 3)  # div by zero
+        accelleration = - grav_const * mx.sum(axis=1)
 
+        # update position and velocity
+        if inplace:
+            self.all_positions = self.all_positions + self.all_velocities * dt
+            self.all_velocities = self.all_velocities + accelleration * dt
+        else:
+            all_positions = self.all_positions + self.all_velocities * dt
+            all_velocities = self.all_velocities + accelleration * dt
+            new_system = StaticSystem(all_positions,
+                                      all_velocities,
+                                      self.all_masses,
+                                      self.bodyindex)
+            return new_system
 
     def centre_of_mass(self):
         """calculate the centre of mass
