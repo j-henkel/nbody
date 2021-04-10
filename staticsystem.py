@@ -82,9 +82,26 @@ class StaticSystem:
 
     def step(self, dt, grav_const=gravitational_constant, inplace=True):
         """calculate the next state of the gravitational system
-        """
-        # TODO docstrings of step()
 
+        Parameters
+        ----------
+        dt: float
+            The timestep on which the simulation operates
+        grav_const: float, optional
+            The gravitational constant. Default is the newtonian
+            gravitational constant.
+        inplace: bool, optional
+            If inplace is True, the existing StaticSystem object
+            gets modified
+            If inplace is False, a new StaticSystem instance is
+            returned
+            Default is True.
+
+        Returns
+        -------
+        StaticSystem, if inplace is False
+            The state of the system after dt has elapsed
+        """
         # calculate connection vector map
         shape = self.all_positions.shape
         gridshape = (shape[0], shape[0], shape[1])
@@ -142,7 +159,18 @@ class StaticSystem:
         self.all_velocities = self.all_velocities - velocity_centre_of_mass
 
     def get_body(self, name: str):
-        """return a PointMass object of the body named name"""
+        """return a PointMass object of the body named name
+
+        Parameters
+        ----------
+        name: str
+            the name of the object to return
+
+        Returns
+        -------
+        PointMass
+            the current state of the PointMass object
+        """
 
         index = self.bodyindex(name)
         m = self.all_masses(index)
