@@ -3,7 +3,7 @@ from pointmass import PointMass
 from scipy.constants import gravitational_constant
 
 
-class StaticSystem:
+class NBodySystem:
     """a gravitational system containing several bodies
 
     Attributes
@@ -14,10 +14,10 @@ class StaticSystem:
         track which column belongs to which body.
     all_positions: np.ndarray
         an array that stores all position arrays in a single array:
-            body1.position = np.array([1, 2, 3])
-            body2.position = np.array([4, 5, 6])
-            MassSystem(body1, body2).all_positions == \
-                np.array([[1, 2, 3], [4, 5, 6]])
+            >> body1.position = np.array([1, 2, 3])
+            >> body2.position = np.array([4, 5, 6])
+            >> NBodySystem(body1, body2).all_positions
+            out: np.array([[1, 2, 3], [4, 5, 6]])
     all_velocitys: np.ndarray
         an array that stores all velocity arrays in a single array
     all_masses: np.ndarray
@@ -80,7 +80,11 @@ class StaticSystem:
             self.all_masses = args[2]
             self.bodyindex = args[3]
 
-    def step(self, dt, grav_const=gravitational_constant, inplace=True):
+    def step(self,
+             dt,
+             grav_const=gravitational_constant,
+             inplace=True,
+             halfstep=False):
         """calculate the next state of the gravitational system
 
         Parameters
@@ -96,6 +100,12 @@ class StaticSystem:
             If inplace is False, a new StaticSystem instance is
             returned
             Default is True.
+        halfstep: bool, optional
+            If halfstep is True, self.all_velocities will be updated
+            with a step of dt/2. self.all_positions will still be
+            updated wit the full step of dt. This can reduce error.
+            Only use halfstep=True in the first step of a simulation! All
+            following steps must be computed wiht halfstep=False.
 
         Returns
         -------
@@ -124,15 +134,21 @@ class StaticSystem:
 
         # update position and velocity
         if inplace:
+            if halfstep:
+                self.all_velocities = self.all_velocities + accelleration * dt/2
+            else:
+                self.all_velocities = self.all_velocities + accelleration * dt
             self.all_positions = self.all_positions + self.all_velocities * dt
-            self.all_velocities = self.all_velocities + accelleration * dt
         else:
+            if halfstep:
+                all_velocities = self.all_velocities + accelleration * dt/2
+            else:
+                all_velocities = self.all_velocities + accelleration * dt
             all_positions = self.all_positions + self.all_velocities * dt
-            all_velocities = self.all_velocities + accelleration * dt
-            new_system = StaticSystem(all_positions,
-                                      all_velocities,
-                                      self.all_masses,
-                                      self.bodyindex)
+            new_system = NBodySystem(all_positions,
+                                     all_velocities,
+                                     self.all_masses,
+                                     self.bodyindex)
             return new_system
 
     def centre_of_mass(self):
