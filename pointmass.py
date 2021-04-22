@@ -6,6 +6,8 @@ class PointMass:
 
     Attributes
     ----------
+    name: string
+        the name of the object
     mass: float
         the mass of the object in kg
     position: np.ndarray
