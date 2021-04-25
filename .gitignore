@@ -1,6 +1,6 @@
 # PyCharm
 .idea
-# VS Code
+# Pycache
 __pycache__
 # Jupyter
 .ipynb_checkpoints
