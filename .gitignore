@@ -4,3 +4,5 @@
 __pycache__
 # Jupyter
 .ipynb_checkpoints
+
+scratch.ipynb
