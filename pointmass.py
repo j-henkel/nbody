@@ -39,7 +39,7 @@ class PointMass:
             the velocity of the object in m/s
         """
 
-        assert np.shape(self.position) == np.shape(self.velocity), \
+        assert np.shape(position) == np.shape(velocity), \
             "position and velocity must be of same shape"
         self.name = name
         self.mass = mass
