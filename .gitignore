@@ -4,5 +4,8 @@
 __pycache__
 # Jupyter
 .ipynb_checkpoints
+# VS Code
+.vscode
+
 
 scratch.ipynb
