@@ -39,6 +39,8 @@ class PointMass:
             the velocity of the object in m/s
         """
 
+        assert np.shape(np.shape(position)) == (1,), \
+            "position must be a onedimensional array"
         assert np.shape(position) == np.shape(velocity), \
             "position and velocity must be of same shape"
         self.name = name

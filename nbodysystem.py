@@ -1,5 +1,5 @@
 import numpy as np
-from pointmass import PointMass
+from .pointmass import PointMass
 from scipy.constants import gravitational_constant
 
 
@@ -36,14 +36,14 @@ class NBodySystem:
         return the PointMass object named name
     """
 
-    def __init__(self, not_yet_initialized=True, *args):
+    def __init__(self, *args, not_yet_initialized=True):
         """
         Parameters
         ----------
         not_yet_initialized: bool
             True if a new MassSysem is initialized from PointMass
             objects. False if all attributes are already in their
-            final shape (this is for example used by step, if
+            final shape (this is for example used by step method, if
             inplace=False)
         args:
             if not_yet_initialized is True: PointMass
