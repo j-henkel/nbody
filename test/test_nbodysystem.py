@@ -34,3 +34,53 @@ class TestNBodySystem():
         mass_compare = system.all_masses == np.array([1])
         assert mass_compare.all()
         assert system.bodyindex == {'b1': 0}
+
+    def test_step_inplace(self):
+        body1 = PointMass('b1', 1, np.array([1, 0, 0]), np.array([0, 1, 1]))
+        body2 = PointMass('b2', 2, np.array([0, 0, 0]), np.array([0, 1, 1]))
+        body3 = PointMass('b3', 1, np.array([-1, 0, 0]), np.array([0, 1, 1]))
+        system = NBodySystem(body1, body2, body3)
+        system.step(dt=0.1, grav_const=1)
+        pos_compare1 = system.get_body('b1').position 
+        pos_compare1 = pos_compare1 == np.array([0.9775, 0.1, 0.1])
+        assert pos_compare1.all()
+        pos_compare2 = system.get_body('b2').position 
+        pos_compare2 = pos_compare2 == np.array([0, 0.1, 0.1])
+        assert pos_compare2.all()
+        pos_compare3 = system.get_body('b3').position 
+        pos_compare3 = pos_compare3 == np.array([-0.9775, 0.1, 0.1])
+        assert pos_compare3.all()
+        vel_compare1 = system.get_body('b1').velocity
+        vel_compare1 = vel_compare1 == np.array([-0.225, 1, 1])
+        assert vel_compare1.all()
+        vel_compare2 = system.get_body('b2').velocity
+        vel_compare2 = vel_compare2 == np.array([0, 1, 1])
+        assert vel_compare1.all()
+        vel_compare3 = system.get_body('b3').velocity
+        vel_compare3 = vel_compare3 == np.array([0.225, 1, 1])
+        assert vel_compare1.all()
+
+    def test_step_inplacefalse(self):
+        body1 = PointMass('b1', 1, np.array([1, 0, 0]), np.array([0, 1, 1]))
+        body2 = PointMass('b2', 2, np.array([0, 0, 0]), np.array([0, 1, 1]))
+        body3 = PointMass('b3', 1, np.array([-1, 0, 0]), np.array([0, 1, 1]))
+        system = NBodySystem(body1, body2, body3)
+        system = system.step(dt=0.1, grav_const=1, inplace=False)
+        pos_compare1 = system.get_body('b1').position 
+        pos_compare1 = pos_compare1 == np.array([0.9775, 0.1, 0.1])
+        assert pos_compare1.all()
+        pos_compare2 = system.get_body('b2').position 
+        pos_compare2 = pos_compare2 == np.array([0, 0.1, 0.1])
+        assert pos_compare2.all()
+        pos_compare3 = system.get_body('b3').position 
+        pos_compare3 = pos_compare3 == np.array([-0.9775, 0.1, 0.1])
+        assert pos_compare3.all()
+        vel_compare1 = system.get_body('b1').velocity
+        vel_compare1 = vel_compare1 == np.array([-0.225, 1, 1])
+        assert vel_compare1.all()
+        vel_compare2 = system.get_body('b2').velocity
+        vel_compare2 = vel_compare2 == np.array([0, 1, 1])
+        assert vel_compare1.all()
+        vel_compare3 = system.get_body('b3').velocity
+        vel_compare3 = vel_compare3 == np.array([0.225, 1, 1])
+        assert vel_compare1.all()

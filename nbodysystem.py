@@ -32,7 +32,7 @@ class NBodySystem:
     fix()
         define the velocity of the centre of mass as zero and adjust
         all single velocities accordingly
-    get_object(name)
+    get_body(name)
         return the PointMass object named name
     """
 
@@ -144,11 +144,12 @@ class NBodySystem:
                 all_velocities = self.all_velocities + accelleration * dt/2
             else:
                 all_velocities = self.all_velocities + accelleration * dt
-            all_positions = self.all_positions + self.all_velocities * dt
-            new_system = NBodySystem(all_positions,
+            all_positions = self.all_positions + all_velocities * dt
+            new_system = NBodySystem(all_positions, 
                                      all_velocities,
                                      self.all_masses,
-                                     self.bodyindex)
+                                     self.bodyindex,
+                                     not_yet_initialized=False)
             return new_system
 
     def simulate(self, start, end, step, grav_const=gravitational_constant):
@@ -190,7 +191,7 @@ class NBodySystem:
         PointMass
             the current state of the PointMass object
         """
-        index = self.bodyindex(name)
+        index = self.bodyindex[name]
         body = PointMass(name=name,
                          mass=self.all_masses[index],
                          position=self.all_positions[index],
