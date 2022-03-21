@@ -1,6 +1,7 @@
 import numpy as np
 from .pointmass import PointMass
 from scipy.constants import gravitational_constant
+import pandas as pd
 
 
 class NBodySystem:
@@ -29,7 +30,7 @@ class NBodySystem:
         run the simulation one timestep
     centre_of_mass()
         calculate the centre of mass of the mass-system
-    fix()
+    stationary()
         define the velocity of the centre of mass as zero and adjust
         all single velocities accordingly
     get_body(name)
@@ -109,7 +110,7 @@ class NBodySystem:
 
         Returns
         -------
-        StaticSystem, if inplace is False
+        NBodySystem, if inplace is False
             The state of the system after dt has elapsed
         """
         # calculate connection vector map
@@ -152,8 +153,57 @@ class NBodySystem:
                                      not_yet_initialized=False)
             return new_system
 
-    def simulate(self, start, end, step, grav_const=gravitational_constant):
-        pass
+    def simulate(self,
+                 end: pd.Timedelta, 
+                 step: pd.Timedelta, 
+                 start='0s',
+                 grav_const=gravitational_constant,
+                 halfstep=True):
+        """simulate the evolution of the NBodySystem over time.
+        Note: after using simulate() self will be in the final state of t=end.
+        If you want to keep theinitial condition make a copy of the 
+        NBodySystem before using simulate().
+
+        Parameters
+        ----------
+        end: pd.Timedelta
+            The time at which the simulation terminates
+        step: pd.Timedelta
+            The timestep of each iteration
+        start: pd.Timedelta, optional
+            The time at the beginning of the simulation.
+            Default is '0s'
+        grav_const: float, optional
+            the gravitational constant. Default is the Newtonian gravitational
+            constant
+        halfstep: bool, optional
+            if halfstep=True the first iteration of the simulation will use
+        """
+
+        index = pd.timedelta_range(start=start, end=end, freq=step)
+        names = list(self.bodyindex.keys())
+        dim = self.all_positions.shape[1]
+        coordinates = []
+        for i in range(dim):
+            coordinates.append('x' + str(i+1))
+        hierarchy = [names, coordinates]
+        columns = pd.MultiIndex.from_product(hierarchy, names=['body', 'pos'])
+        results = pd.DataFrame(np.zeros((len(index), len(names) * dim)),
+                               index=index,
+                               columns=columns)
+
+        dt = pd.Timedelta(step).value * 1e-9
+
+        #run simulation and copy positions into results
+        flat = self.all_positions.flatten()
+        results.iloc[0] = flat
+        self.step(dt=dt, grav_const=grav_const, inplace=True, halfstep=halfstep)
+        for i in range(len(index) - 1):
+            flat = self.all_positions.flatten()
+            results.iloc[i + 1] = flat
+            self.step(dt=dt, grav_const=grav_const, inplace=True, halfstep=False)
+
+        return results
 
     def centre_of_mass(self):
         """calculate the centre of mass
@@ -168,7 +218,7 @@ class NBodySystem:
         centreofmass = mx / total_mass
         return centreofmass
 
-    def fix(self):
+    def stationary(self):
         """define the velocity of the centre of mass as zero and
         adjust self.all_velocities accordingly"""
 
