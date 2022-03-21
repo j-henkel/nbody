@@ -1,1 +1,2 @@
-# Solving the n-body problem
+# nbody
+Solving the n-body problem
