@@ -178,6 +178,11 @@ class NBodySystem:
             constant
         halfstep: bool, optional
             if halfstep=True the first iteration of the simulation will use
+
+        Returns
+        -------
+        pandas.DataFrame
+            contains positional and velocity data at each timestep
         """
 
         index = pd.timedelta_range(start=start, end=end, freq=step)
@@ -197,11 +202,13 @@ class NBodySystem:
         #run simulation and copy positions into results
         flat = self.all_positions.flatten()
         results.iloc[0] = flat
-        self.step(dt=dt, grav_const=grav_const, inplace=True, halfstep=halfstep)
+        self.step(dt=dt, grav_const=grav_const, inplace=True, 
+                  halfstep=halfstep)
         for i in range(len(index) - 1):
             flat = self.all_positions.flatten()
             results.iloc[i + 1] = flat
-            self.step(dt=dt, grav_const=grav_const, inplace=True, halfstep=False)
+            self.step(dt=dt, grav_const=grav_const, inplace=True, 
+                      halfstep=False)
 
         return results
 
